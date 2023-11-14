@@ -11,9 +11,15 @@ def main():
     
     market_return_trade = OptionComparator(options, assumptions)\
         .vary('stock_market_return', np.linspace(0.02, 0.1, 100))
-    market_return_trade.plot('investment_val_at_beneficiary_eligibility')
-    market_return_trade.plot('required_witdraw_rate_to_match_pension')
-    
+    market_return_trade.plot('effective_total_income')
+
+    withdraw_rate_trade = OptionComparator(options, assumptions)\
+        .vary('investment_withdraw_rate', np.linspace(0.025, 0.1, 100))
+    withdraw_rate_trade.plot('effective_total_income')
+
+    necessary_take_home_trade = OptionComparator(options, assumptions)\
+        .vary('necessary_take_home', np.linspace(6000, 12000, 100))
+    necessary_take_home_trade.plot('effective_total_income')
 
 
 if __name__ == '__main__':

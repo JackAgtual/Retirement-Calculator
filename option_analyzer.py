@@ -12,6 +12,7 @@ class OptionAnalyzer():
         self.benificiary_life_expectancy = assumptions['beneficiary_life_expectancy']
         self.necessary_take_home = assumptions['necessary_take_home'] * 12
         self.stock_market_return = assumptions['stock_market_return']
+        self.investment_withdraw_rate = assumptions['investment_withdraw_rate']
         self.data = self.__generate_data_table()
 
 
@@ -59,11 +60,17 @@ class OptionAnalyzer():
 
         required_withdraw_rate = self.benificiary_anual_allowance / investment_growth
 
+        effective_investment_income = investment_val_at_beneficiary_eligibility * self.investment_withdraw_rate
+
+        effective_total_income = effective_investment_income + self.benificiary_anual_allowance
+
         return {
             'total_investment_contribution': total_investment_contribution,
             'investment_val_at_beneficiary_eligibility': investment_val_at_beneficiary_eligibility,
             'investment_growth': investment_growth,
             'required_witdraw_rate_to_match_pension': required_withdraw_rate,
-            'total_amount_beneficiary_receives_from_pension': total_amount_beneficiary_receives_from_pension
+            'total_amount_beneficiary_receives_from_pension': total_amount_beneficiary_receives_from_pension,
+            'effective_investment_income': effective_investment_income,
+            'effective_total_income': effective_total_income
         }
 
