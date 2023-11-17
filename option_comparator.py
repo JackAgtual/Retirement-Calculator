@@ -1,3 +1,5 @@
+import pandas as pd
+import itertools
 from typing import List, Self
 from analysis_types import AssumptionsKeys, TradespaceOutput, Assumptions, Metrics, Option, AvailableMetrics
 from option_analyzer import OptionAnalyzer
@@ -49,5 +51,29 @@ class OptionComparator():
         plt.title(f'{dependent_var_name} vs {self.independent_variable_name}')
         plt.legend()
         plt.show()
+    
+    
+    def tradespace(self, independent_vars: List[AssumptionsKeys], independent_vals=List[List[int | float]]) -> pd.DataFrame:
+        if len(independent_vars) != len(independent_vals):
+            raise Exception('Both inputs must be the same length')
+        
+        df = pd.DataFrame()
+
+        all_independent_vals = list(itertools.product(*independent_vals))
+        
+        for independent_vals in all_independent_vals:
+            assumptions = self.baseline_assumptions.copy()
+            for i, var_name in enumerate(independent_vars):
+                assumptions[var_name] = independent_vals[i]
+            print(independent_vals)
+            for option in self.options:
+                metrics = OptionAnalyzer(option, assumptions).metrics()
+
+                data_to_write = {'option': option['name'], **assumptions, **metrics}
+                new_df = pd.DataFrame(data_to_write, index=[0])
+                df = pd.concat([df, new_df], ignore_index=True)
+
+        return df            
+
 
             

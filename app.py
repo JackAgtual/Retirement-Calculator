@@ -11,6 +11,21 @@ def main():
     with open('data.json', 'r') as file:
         options: List[Option] = json.load(file)
     
+    full_trade = OptionComparator(options, baseline_assumptions).tradespace(
+        ['your_life_expectancy', 'stock_market_return', 'necessary_take_home', 'investment_withdraw_rate'], 
+        [
+            [20, 25, 30, 35, 40],
+            [0.02, 0.04, 0.06, 0.08, 0.1],
+            [5000, 6000, 7000, 8000, 9000, 10000, 11000, 12000],
+            [0.04, 0.06, 0.08]
+        ]
+    )
+    full_trade.to_csv('tradespace.csv', index=False)
+    
+    for option in options:
+        print(option['name'])
+        print(OptionAnalyzer(option, baseline_assumptions).metrics())
+        
     market_return_trade = OptionComparator(options, baseline_assumptions)\
         .vary('stock_market_return', np.linspace(0.02, 0.1, 100))
     market_return_trade.plot('effective_total_income')
@@ -26,6 +41,10 @@ def main():
     your_life_expectancy_trade = OptionComparator(options, baseline_assumptions)\
         .vary('your_life_expectancy', np.arange(20, 40, 1))
     your_life_expectancy_trade.plot('effective_total_income')
+
+    beneficiary_life_expectancy_trade = OptionComparator(options, baseline_assumptions)\
+        .vary('beneficiary_life_expectancy', np.linspace(35, 65, 100))
+    beneficiary_life_expectancy_trade.plot('effective_total_income')
 
     # Total effective income vs necessary take home & withdrawal rate
     necessary_take_home_vals = np.linspace(8000, 12000, 10)

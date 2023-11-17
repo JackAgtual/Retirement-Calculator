@@ -2,4 +2,5 @@
 .vscode
 data.json
 assumptions.py
+*.csv
 __pycache__
